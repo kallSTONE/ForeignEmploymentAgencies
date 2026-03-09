@@ -13,7 +13,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   session: null, user: null, isAdmin: false, loading: true,
-  signIn: async () => ({ error: null }), signOut: async () => {},
+  signIn: async () => ({ error: null }), signOut: async () => { },
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -25,29 +25,64 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        const { data } = await supabase.rpc("has_role", { _user_id: session.user.id, _role: "admin" });
-        setIsAdmin(!!data);
-      } else {
-        setIsAdmin(false);
+    let isMounted = true;
+
+    const resolveAdminRole = async (nextUser: User | null) => {
+      if (!nextUser) {
+        if (isMounted) setIsAdmin(false);
+        return;
       }
-      setLoading(false);
+
+      try {
+        const { data, error } = await supabase.rpc("has_role", { _user_id: nextUser.id, _role: "admin" });
+
+        if (error) {
+          console.error("Failed to resolve admin role", error);
+          if (isMounted) setIsAdmin(false);
+          return;
+        }
+
+        if (isMounted) setIsAdmin(!!data);
+      } catch (error) {
+        console.error("Unexpected admin role check failure", error);
+        if (isMounted) setIsAdmin(false);
+      }
+    };
+
+    const applySession = async (nextSession: Session | null) => {
+      if (!isMounted) return;
+
+      setSession(nextSession);
+      const nextUser = nextSession?.user ?? null;
+      setUser(nextUser);
+      await resolveAdminRole(nextUser);
+
+      if (isMounted) setLoading(false);
+    };
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      void applySession(nextSession);
     });
 
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        const { data } = await supabase.rpc("has_role", { _user_id: session.user.id, _role: "admin" });
-        setIsAdmin(!!data);
-      }
-      setLoading(false);
-    });
+    supabase.auth
+      .getSession()
+      .then(({ data: { session: nextSession } }) => {
+        void applySession(nextSession);
+      })
+      .catch((error) => {
+        console.error("Failed to load session", error);
+        if (isMounted) {
+          setSession(null);
+          setUser(null);
+          setIsAdmin(false);
+          setLoading(false);
+        }
+      });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
