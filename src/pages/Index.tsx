@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Shield, Globe, Users, Award, Star, ChevronRight, MapPin, Briefcase, DollarSign, MessageCircle, Send, Phone } from "lucide-react";
 import heroImg from "@/assets/hero-workers.jpg";
@@ -5,7 +6,11 @@ import gulfImg from "@/assets/gulf-skyline.jpg";
 import trainingImg from "@/assets/training-center.jpg";
 import officeImg from "@/assets/office.jpg";
 import gradImg from "@/assets/graduation.jpg";
+import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+type Job = Tables<"jobs">;
 
 const countries = [
   { name: "Saudi Arabia", flag: "🇸🇦", jobs: 120 },
@@ -13,13 +18,6 @@ const countries = [
   { name: "Qatar", flag: "🇶🇦", jobs: 42 },
   { name: "Kuwait", flag: "🇰🇼", jobs: 35 },
   { name: "Oman", flag: "🇴🇲", jobs: 28 },
-];
-
-const featuredJobs = [
-  { title: "Housekeeping Staff", country: "Saudi Arabia", salary: "$350-450/mo", type: "2-Year Contract" },
-  { title: "Construction Worker", country: "UAE", salary: "$400-550/mo", type: "2-Year Contract" },
-  { title: "Domestic Worker", country: "Kuwait", salary: "$300-400/mo", type: "2-Year Contract" },
-  { title: "Hotel Attendant", country: "Qatar", salary: "$400-500/mo", type: "2-Year Contract" },
 ];
 
 const testimonials = [
@@ -30,6 +28,32 @@ const testimonials = [
 
 export default function HomePage() {
   const { t } = useLanguage();
+  const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
+  const [loadingFeaturedJobs, setLoadingFeaturedJobs] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadFeaturedJobs = async () => {
+      const { data } = await supabase
+        .from("jobs")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(4);
+
+      if (!isMounted) return;
+
+      setFeaturedJobs(data ?? []);
+      setLoadingFeaturedJobs(false);
+    };
+
+    loadFeaturedJobs();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <>
@@ -112,24 +136,40 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {featuredJobs.map((job, i) => (
-              <div key={i} className="card-corporate">
-                <div className="flex items-center gap-2 mb-3">
-                  <Briefcase className="w-4 h-4 text-accent" />
-                  <span className="badge-gold text-[10px]">{job.type}</span>
+            {loadingFeaturedJobs &&
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={`job-skeleton-${i}`} className="card-corporate animate-pulse" aria-hidden="true">
+                  <div className="h-5 w-24 rounded bg-muted mb-3" />
+                  <div className="h-6 w-4/5 rounded bg-muted mb-2" />
+                  <div className="h-4 w-1/2 rounded bg-muted mb-2" />
+                  <div className="h-4 w-2/5 rounded bg-muted mb-5" />
+                  <div className="h-4 w-20 rounded bg-muted" />
                 </div>
-                <h3 className="font-heading text-lg font-semibold text-foreground mb-1">{job.title}</h3>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground font-body mb-2">
-                  <MapPin className="w-3 h-3" /> {job.country}
+              ))}
+
+            {!loadingFeaturedJobs &&
+              featuredJobs.map((job) => (
+                <div key={job.id} className="card-corporate">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Briefcase className="w-4 h-4 text-accent" />
+                    <span className="badge-gold text-[10px]">{job.contract_length ?? "-"}</span>
+                  </div>
+                  <h3 className="font-heading text-lg font-semibold text-foreground mb-1">{job.title}</h3>
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground font-body mb-2">
+                    <MapPin className="w-3 h-3" /> {job.country}
+                  </div>
+                  <div className="flex items-center gap-1 text-sm font-semibold text-accent font-body">
+                    <DollarSign className="w-3 h-3" /> ${job.salary_min ?? 0}-{job.salary_max ?? 0}{t.jobs.month}
+                  </div>
+                  <Link to="/jobs" className="mt-4 block text-sm font-medium text-primary hover:text-accent transition-colors font-body">
+                    {t.home.applyNow} →
+                  </Link>
                 </div>
-                <div className="flex items-center gap-1 text-sm font-semibold text-accent font-body">
-                  <DollarSign className="w-3 h-3" /> {job.salary}
-                </div>
-                <Link to="/jobs" className="mt-4 block text-sm font-medium text-primary hover:text-accent transition-colors font-body">
-                  {t.home.applyNow} →
-                </Link>
-              </div>
-            ))}
+              ))}
+
+            {!loadingFeaturedJobs && featuredJobs.length === 0 && (
+              <div className="lg:col-span-4 md:col-span-2 text-center py-10 text-body">{t.jobs.noResults}</div>
+            )}
           </div>
         </div>
       </section>
