@@ -98,7 +98,24 @@ export default function Jobs() {
           )}
 
           {loading ? (
-            <p className="text-body text-center py-12">{t.jobs.loading}</p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5" aria-hidden="true">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={`jobs-skeleton-${i}`} className="card-corporate animate-pulse">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="h-5 w-20 rounded bg-muted" />
+                    <div className="h-4 w-24 rounded bg-muted" />
+                  </div>
+                  <div className="h-6 w-4/5 rounded bg-muted mb-3" />
+                  <div className="space-y-2">
+                    <div className="h-4 w-1/2 rounded bg-muted" />
+                    <div className="h-4 w-3/5 rounded bg-muted" />
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-border">
+                    <div className="h-4 w-24 rounded bg-muted" />
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
             <>
               <div className="text-sm text-muted-foreground font-body mb-4">{filtered.length} positions found</div>

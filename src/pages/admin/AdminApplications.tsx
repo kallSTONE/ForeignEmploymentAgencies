@@ -14,6 +14,7 @@ export default function AdminApplications() {
   const [selected, setSelected] = useState<Application | null>(null);
   const [filter, setFilter] = useState("All");
   const [statusNote, setStatusNote] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("Submitted");
 
   const load = async () => {
     setLoading(true);
@@ -30,16 +31,17 @@ export default function AdminApplications() {
     toast.success(`Status updated to ${status}`);
     setSelected(null);
     setStatusNote("");
+    setSelectedStatus("Submitted");
     load();
   };
 
   const filtered = filter === "All" ? apps : apps.filter((a) => a.status === filter);
 
   return (
-    <div className="p-6 md:p-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-        <h1 className="font-heading text-2xl font-bold text-foreground">Worker Applications</h1>
-        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="input-corporate w-auto">
+    <div className="p-4 sm:p-6 md:p-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-5 sm:mb-6 gap-3">
+        <h1 className="font-heading text-xl sm:text-2xl font-bold text-foreground">Worker Applications</h1>
+        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="input-corporate w-full sm:w-auto">
           <option>All</option>
           {statuses.map((s) => <option key={s}>{s}</option>)}
         </select>
@@ -48,7 +50,7 @@ export default function AdminApplications() {
       {/* Detail modal */}
       {selected && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50 p-4" onClick={() => setSelected(null)}>
-          <div className="bg-card rounded-md max-w-lg w-full p-6 max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-card rounded-md max-w-lg w-full p-4 sm:p-6 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-heading text-xl font-bold text-foreground">{selected.full_name}</h2>
               <button onClick={() => setSelected(null)}><X className="w-5 h-5 text-muted-foreground" /></button>
@@ -97,8 +99,8 @@ export default function AdminApplications() {
               <h3 className="font-heading text-sm font-semibold text-foreground mb-2">Update Status</h3>
               <div className="space-y-3">
                 <select
-                  defaultValue={selected.status ?? "Submitted"}
-                  id="status-select"
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
                   className="input-corporate"
                 >
                   {statuses.map((s) => <option key={s}>{s}</option>)}
@@ -111,8 +113,7 @@ export default function AdminApplications() {
                 />
                 <button
                   onClick={() => {
-                    const sel = (document.getElementById("status-select") as HTMLSelectElement).value;
-                    updateStatus(selected.id, sel);
+                    updateStatus(selected.id, selectedStatus);
                   }}
                   className="btn-primary-corporate w-full"
                 >
@@ -127,41 +128,93 @@ export default function AdminApplications() {
       {loading ? (
         <p className="text-body">Loading applications...</p>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm font-body">
-            <thead>
-              <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
-                <th className="py-3 px-3">ID</th>
-                <th className="py-3 px-3">Name</th>
-                <th className="py-3 px-3">Phone</th>
-                <th className="py-3 px-3">Country</th>
-                <th className="py-3 px-3">Category</th>
-                <th className="py-3 px-3">Status</th>
-                <th className="py-3 px-3">Date</th>
-                <th className="py-3 px-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((a) => (
-                <tr key={a.id} className="border-b border-border/50 hover:bg-muted/30">
-                  <td className="py-3 px-3 font-mono text-xs">{a.application_id}</td>
-                  <td className="py-3 px-3 font-medium text-foreground">{a.full_name}</td>
-                  <td className="py-3 px-3 text-muted-foreground">{a.phone}</td>
-                  <td className="py-3 px-3 text-muted-foreground">{a.desired_country}</td>
-                  <td className="py-3 px-3 text-muted-foreground">{a.job_category}</td>
-                  <td className="py-3 px-3"><span className="badge-gold text-[10px]">{a.status}</span></td>
-                  <td className="py-3 px-3 text-muted-foreground text-xs">{new Date(a.created_at).toLocaleDateString()}</td>
-                  <td className="py-3 px-3">
-                    <button onClick={() => setSelected(a)} className="text-muted-foreground hover:text-foreground"><Eye className="w-4 h-4" /></button>
-                  </td>
+        <>
+          <div className="space-y-3 md:hidden">
+            {filtered.map((a) => (
+              <div key={a.id} className="card-corporate p-4">
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div>
+                    <h2 className="font-heading text-base font-semibold text-foreground">{a.full_name}</h2>
+                    <p className="font-mono text-[11px] text-muted-foreground mt-0.5">{a.application_id}</p>
+                  </div>
+                  <span className="badge-gold text-[10px]">{a.status}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs font-body text-muted-foreground mb-4">
+                  <div>
+                    <div className="uppercase tracking-wider">Phone</div>
+                    <div className="text-foreground text-sm normal-case tracking-normal">{a.phone}</div>
+                  </div>
+                  <div>
+                    <div className="uppercase tracking-wider">Country</div>
+                    <div className="text-foreground text-sm normal-case tracking-normal">{a.desired_country}</div>
+                  </div>
+                  <div>
+                    <div className="uppercase tracking-wider">Category</div>
+                    <div className="text-foreground text-sm normal-case tracking-normal">{a.job_category}</div>
+                  </div>
+                  <div>
+                    <div className="uppercase tracking-wider">Date</div>
+                    <div className="text-foreground text-sm normal-case tracking-normal">{new Date(a.created_at).toLocaleDateString()}</div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelected(a);
+                    setSelectedStatus(a.status ?? "Submitted");
+                  }}
+                  className="btn-outline-corporate w-full text-xs py-2 px-3"
+                >
+                  <Eye className="w-3.5 h-3.5 mr-1" /> View Details
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden md:block overflow-x-auto">
+            <table className="w-full text-sm font-body">
+              <thead>
+                <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
+                  <th className="py-3 px-3">ID</th>
+                  <th className="py-3 px-3">Name</th>
+                  <th className="py-3 px-3">Phone</th>
+                  <th className="py-3 px-3">Country</th>
+                  <th className="py-3 px-3">Category</th>
+                  <th className="py-3 px-3">Status</th>
+                  <th className="py-3 px-3">Date</th>
+                  <th className="py-3 px-3">Actions</th>
                 </tr>
-              ))}
-              {filtered.length === 0 && (
-                <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">No applications found.</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {filtered.map((a) => (
+                  <tr key={a.id} className="border-b border-border/50 hover:bg-muted/30">
+                    <td className="py-3 px-3 font-mono text-xs">{a.application_id}</td>
+                    <td className="py-3 px-3 font-medium text-foreground">{a.full_name}</td>
+                    <td className="py-3 px-3 text-muted-foreground">{a.phone}</td>
+                    <td className="py-3 px-3 text-muted-foreground">{a.desired_country}</td>
+                    <td className="py-3 px-3 text-muted-foreground">{a.job_category}</td>
+                    <td className="py-3 px-3"><span className="badge-gold text-[10px]">{a.status}</span></td>
+                    <td className="py-3 px-3 text-muted-foreground text-xs">{new Date(a.created_at).toLocaleDateString()}</td>
+                    <td className="py-3 px-3">
+                      <button
+                        onClick={() => {
+                          setSelected(a);
+                          setSelectedStatus(a.status ?? "Submitted");
+                        }}
+                        className="text-muted-foreground hover:text-foreground"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {filtered.length === 0 && (
+            <div className="text-center py-8 text-muted-foreground">No applications found.</div>
+          )}
+        </>
       )}
     </div>
   );

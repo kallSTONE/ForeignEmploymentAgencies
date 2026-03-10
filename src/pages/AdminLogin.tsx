@@ -24,13 +24,13 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center section-padding bg-background">
-      <div className="card-corporate max-w-sm w-full">
+    <div className="min-h-[70vh] flex items-center justify-center bg-background px-4 sm:px-6 py-10 md:py-16">
+      <div className="card-corporate max-w-sm w-full p-5 sm:p-6">
         <div className="text-center mb-6">
           <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-3">
             <Lock className="w-6 h-6 text-accent" />
           </div>
-          <h1 className="font-heading text-2xl font-bold text-foreground">Admin Login</h1>
+          <h1 className="font-heading text-xl sm:text-2xl font-bold text-foreground">Admin Login</h1>
           <p className="text-body-sm mt-1">Sign in to access the admin dashboard</p>
         </div>
 
