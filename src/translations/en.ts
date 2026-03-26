@@ -53,6 +53,40 @@ export const en = {
     whatsapp: "WhatsApp",
     telegram: "Telegram",
     callUs: "Call Us",
+    faqTitle: "Frequently Asked Questions",
+    faqSub: "Clear answers to the most common questions from employers and job seekers working with Horizon Manpower.",
+    faqItems: [
+      {
+        question: "How quickly can employers receive shortlisted candidates?",
+        answer:
+          "Timelines depend on role complexity and volume, but we typically begin shortlist delivery shortly after receiving a complete and approved job order. For urgent needs, we can prioritize screening and release candidates in fast-tracked batches.",
+      },
+      {
+        question: "What documents are required to start an employer request?",
+        answer:
+          "Most requests begin with a clear job order, position details, quantity, and contract requirements. Our team then guides employers through any supporting documents needed for legal processing, deployment readiness, and onboarding coordination.",
+      },
+      {
+        question: "Do you provide support to candidates after registration?",
+        answer:
+          "Yes. Registered candidates receive guidance throughout screening, training readiness, documentation checks, and status follow-up. We also provide practical pre-departure orientation so candidates understand expectations before travel.",
+      },
+      {
+        question: "How do you maintain quality in high-volume recruitment?",
+        answer:
+          "We use a stage-based workflow with verification checkpoints at screening, interview, and documentation phases. This allows us to scale volume while keeping candidate quality, compliance accuracy, and communication consistency under control.",
+      },
+      {
+        question: "Can candidates apply without prior Gulf work experience?",
+        answer:
+          "Yes, depending on the role and employer criteria. Some positions accept entry-level candidates who show strong readiness, discipline, and trainability. We match applicants to suitable openings based on both experience and potential.",
+      },
+      {
+        question: "How can applicants track their current application status?",
+        answer:
+          "Candidates can use the status checker in the portal and contact our support channels for clarification when needed. We encourage applicants to keep their phone details active so updates on interview, documentation, and travel stages are not missed.",
+      },
+    ],
   },
 
   // About page
@@ -73,6 +107,40 @@ export const en = {
     trainingTitle: "Our Training Center",
     trainingSub: "We operate a dedicated pre-departure training center where workers receive:",
     learnMore: "Learn more about our training programs →",
+    faqTitle: "Frequently Asked Questions",
+    faqSub: "Common questions from employers, agencies, and candidates about our recruitment process and support model.",
+    faqItems: [
+      {
+        question: "How does Horizon verify candidates before overseas deployment?",
+        answer:
+          "Our recruitment team runs a structured screening process that includes identity verification, skills assessment, reference checks when available, and role-fit interviews. Candidates also complete orientation on workplace conduct and destination-country expectations before final mobilization.",
+      },
+      {
+        question: "What industries and job categories do you mainly support?",
+        answer:
+          "We support domestic, hospitality, facility services, construction support, and other labor-focused categories based on partner demand. For each job order, we align shortlisting with required experience, language readiness, and contract terms.",
+      },
+      {
+        question: "How do you ensure legal and ethical recruitment practices?",
+        answer:
+          "We operate under licensed recruitment procedures and documented workflows that prioritize transparency, fair contracts, and clear candidate communication. Compliance checks are applied at each stage to reduce risk for both employers and workers.",
+      },
+      {
+        question: "Do candidates receive training before travel?",
+        answer:
+          "Yes. Candidates receive pre-departure preparation that can include job readiness, behavioral orientation, and practical guidance on employer expectations. This preparation improves onboarding speed and helps reduce early-placement issues.",
+      },
+      {
+        question: "Can employers request urgent or bulk recruitment?",
+        answer:
+          "Yes, we handle both standard and urgent volume requests. Once we receive a complete job order, our team prioritizes screening and documentation in aligned batches so employers can mobilize workers according to project timelines.",
+      },
+      {
+        question: "What support is available after deployment?",
+        answer:
+          "Our role does not end at departure. We stay available for coordination on arrival issues, documentation clarifications, and communication support between employers and candidates, especially during the early settlement period.",
+      },
+    ],
   },
 
   // Jobs page
@@ -245,5 +313,14 @@ export const en = {
     driving: "Driving",
     security: "Security",
     other: "Other",
+    quickContacts: "Quick Contacts",
+    openChat: "Open chat",
+    closeChat: "Close chat",
+    chatTitle: "Horizon Support",
+    chatGreeting: "Hi there! How can we help you today?",
+    chatPrompt: "This is a quick demo chat widget. Choose one of the options below to contact our team.",
+    visitContactPage: "Visit Contact Page",
+    writeWhatsApp: "Write on WhatsApp",
+    callNow: "Call Now",
   },
 };

@@ -6,6 +6,7 @@ import trainingImg from "@/assets/training-center.png";
 import officeImg from "@/assets/office.png";
 import gradImg from "@/assets/graduation.png";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const countries = [
   { name: "Saudi Arabia", flag: "🇸🇦", jobs: 120 },
@@ -23,6 +24,8 @@ const testimonials = [
 
 export default function HomePage() {
   const { t } = useLanguage();
+  const faqs = t.home.faqItems;
+
   const supportServices = [
     {
       icon: Briefcase,
@@ -263,6 +266,32 @@ export default function HomePage() {
                 <img src={img} alt={`Gallery ${i + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="section-padding bg-secondary">
+        <div className="container-wide max-w-4xl">
+          <div className="text-center mb-10">
+            <div className="gold-divider mx-auto mb-4" />
+            <h2 className="heading-section mb-3">{t.home.faqTitle}</h2>
+            <p className="text-body max-w-2xl mx-auto">
+              {t.home.faqSub}
+            </p>
+          </div>
+
+          <div className="card-corporate">
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((faq, index) => (
+                <AccordionItem key={faq.question} value={`home-faq-${index}`}>
+                  <AccordionTrigger className="text-left font-heading text-base text-foreground hover:no-underline">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-body-sm leading-relaxed">{faq.answer}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </div>
       </section>
