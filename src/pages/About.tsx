@@ -1,7 +1,7 @@
 import { Shield, Globe, Users, Target, Eye, Heart } from "lucide-react";
-import officeImg from "@/assets/office.jpg";
-import trainingImg from "@/assets/training-center.jpg";
-import gradImg from "@/assets/graduation.jpg";
+import officeImg from "@/assets/office.png";
+import trainingImg from "@/assets/training-center.png";
+import gradImg from "@/assets/graduation.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function About() {

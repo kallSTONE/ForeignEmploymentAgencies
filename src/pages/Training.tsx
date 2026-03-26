@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { BookOpen, Clock, Award, Users } from "lucide-react";
-import trainingImg from "@/assets/training-center.jpg";
-import gradImg from "@/assets/graduation.jpg";
+import trainingImg from "@/assets/training-center.png";
+import gradImg from "@/assets/graduation.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Training() {

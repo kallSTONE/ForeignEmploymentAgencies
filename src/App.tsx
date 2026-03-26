@@ -15,6 +15,7 @@ import WorkerRegistration from "./pages/WorkerRegistration";
 import EmployerRequest from "./pages/EmployerRequest";
 import StatusChecker from "./pages/StatusChecker";
 import Contact from "./pages/Contact";
+import PortalHome from "./pages/PortalHome";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminJobs from "./pages/admin/AdminJobs";
@@ -41,6 +42,11 @@ const App = () => (
               <Route path="/register" element={<WorkerRegistration />} />
               <Route path="/employer" element={<EmployerRequest />} />
               <Route path="/status" element={<StatusChecker />} />
+              <Route path="/portal" element={<PortalHome />} />
+              <Route path="/portal/jobs" element={<Jobs />} />
+              <Route path="/portal/training" element={<Training />} />
+              <Route path="/portal/register" element={<WorkerRegistration />} />
+              <Route path="/portal/status" element={<StatusChecker />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/admin/login" element={<AdminLogin />} />
             </Route>

@@ -9,6 +9,7 @@ export default function Navbar() {
   const location = useLocation();
   const { lang, t, setLang } = useLanguage();
   const [langOpen, setLangOpen] = useState(false);
+  const isPortalRoute = location.pathname.startsWith("/portal");
 
   const langOptions = [
     { code: "en" as const, label: "English" },
@@ -16,15 +17,19 @@ export default function Navbar() {
     { code: "ar" as const, label: "العربية" },
   ];
 
-  const navLinks = [
-    { label: t.nav.home, path: "/" },
-    { label: t.nav.about, path: "/about" },
-    { label: t.nav.jobs, path: "/jobs" },
-    { label: t.nav.training, path: "/training" },
-    { label: t.nav.register, path: "/register" },
-    { label: t.nav.status, path: "/status" },
-    { label: t.nav.contact, path: "/contact" },
-  ];
+  const navLinks = isPortalRoute
+    ? [
+        { label: t.nav.home, path: "/portal" },
+        { label: t.nav.jobs, path: "/portal/jobs" },
+        { label: t.nav.training, path: "/portal/training" },
+        { label: t.nav.register, path: "/portal/register" },
+        { label: t.nav.status, path: "/portal/status" },
+      ]
+    : [
+        { label: t.nav.home, path: "/" },
+        { label: t.nav.about, path: "/about" },
+        { label: t.nav.contact, path: "/contact" },
+      ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-sm">
@@ -91,9 +96,20 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
-          <Link to="/employer" className="btn-gold ml-3 text-xs py-2 px-5">
-            {t.nav.forEmployers}
-          </Link>
+          {isPortalRoute ? (
+            <Link to="/" className="btn-outline-corporate ml-3 text-xs py-2 px-5">
+              {t.nav.forEmployers}
+            </Link>
+          ) : (
+            <>
+              <Link to="/portal" className="btn-outline-corporate ml-3 text-xs py-2 px-5">
+                {t.nav.candidatePortal}
+              </Link>
+              <Link to="/employer" className="btn-gold ml-2 text-xs py-2 px-5">
+                {t.nav.forEmployers}
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -135,9 +151,20 @@ export default function Navbar() {
                 {l.label}
               </Link>
             ))}
-            <Link to="/employer" onClick={() => setOpen(false)} className="btn-gold w-full mt-3 text-xs py-2.5">
-              {t.nav.forEmployers}
-            </Link>
+            {isPortalRoute ? (
+              <Link to="/" onClick={() => setOpen(false)} className="btn-outline-corporate w-full mt-3 text-xs py-2.5">
+                {t.nav.forEmployers}
+              </Link>
+            ) : (
+              <>
+                <Link to="/portal" onClick={() => setOpen(false)} className="btn-outline-corporate w-full mt-3 text-xs py-2.5">
+                  {t.nav.candidatePortal}
+                </Link>
+                <Link to="/employer" onClick={() => setOpen(false)} className="btn-gold w-full mt-2 text-xs py-2.5">
+                  {t.nav.forEmployers}
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

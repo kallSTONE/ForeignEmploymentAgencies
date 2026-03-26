@@ -1,16 +1,11 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Shield, Globe, Users, Award, Star, ChevronRight, MapPin, Briefcase, DollarSign, MessageCircle, Send, Phone } from "lucide-react";
+import { ArrowRight, Shield, Globe, Users, Award, Star, ChevronRight, MessageCircle, Send, Phone, Briefcase } from "lucide-react";
 import heroImg from "@/assets/hero-workers.jpg";
 import gulfImg from "@/assets/gulf-skyline.jpg";
-import trainingImg from "@/assets/training-center.jpg";
-import officeImg from "@/assets/office.jpg";
-import gradImg from "@/assets/graduation.jpg";
-import { supabase } from "@/integrations/supabase/client";
-import type { Tables } from "@/integrations/supabase/types";
+import trainingImg from "@/assets/training-center.png";
+import officeImg from "@/assets/office.png";
+import gradImg from "@/assets/graduation.png";
 import { useLanguage } from "@/contexts/LanguageContext";
-
-type Job = Tables<"jobs">;
 
 const countries = [
   { name: "Saudi Arabia", flag: "🇸🇦", jobs: 120 },
@@ -21,39 +16,45 @@ const countries = [
 ];
 
 const testimonials = [
-  { name: "Almaz T.", location: "Working in Dubai, UAE", text: "Horizon Manpower helped me find a great job in Dubai. The training I received before departure prepared me well for my work. I'm now supporting my family back home." },
-  { name: "Kebede M.", location: "Working in Riyadh, Saudi Arabia", text: "I was nervous about working abroad, but the agency guided me through every step — from registration to arrival. I feel safe and well supported." },
-  { name: "Tigist A.", location: "Working in Doha, Qatar", text: "The pre-departure training was excellent. I learned the language basics and cultural expectations. My employer is very satisfied with my work." },
+  { name: "Al Noor Recruitment", location: "Riyadh, Saudi Arabia", text: "Horizon consistently delivers pre-screened Ethiopian candidates who match our client job orders and deployment timelines." },
+  { name: "GulfConnect Manpower", location: "Dubai, UAE", text: "Their documentation process is transparent and fast. We can track every candidate stage from intake to mobilization." },
+  { name: "Doha Talent Services", location: "Doha, Qatar", text: "The training readiness and communication quality from Horizon reduced onboarding issues and improved retention for our placements." },
 ];
 
 export default function HomePage() {
   const { t } = useLanguage();
-  const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
-  const [loadingFeaturedJobs, setLoadingFeaturedJobs] = useState(true);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadFeaturedJobs = async () => {
-      const { data } = await supabase
-        .from("jobs")
-        .select("*")
-        .eq("is_active", true)
-        .order("created_at", { ascending: false })
-        .limit(4);
-
-      if (!isMounted) return;
-
-      setFeaturedJobs(data ?? []);
-      setLoadingFeaturedJobs(false);
-    };
-
-    loadFeaturedJobs();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const supportServices = [
+    {
+      icon: Briefcase,
+      title: "Immediate Job Placement Assistance",
+      desc: "Supporting job seekers in finding employment opportunities quickly and efficiently.",
+    },
+    {
+      icon: Award,
+      title: "Pre-Employment Training & Orientation",
+      desc: "Equipping candidates with necessary skills and cultural understanding to thrive in international job markets.",
+    },
+    {
+      icon: Shield,
+      title: "Visa & Documentation Support",
+      desc: "Assisting with visa processing, contract management, and compliance documentation.",
+    },
+    {
+      icon: Globe,
+      title: "Relocation & Transition Assistance",
+      desc: "Helping candidates with smooth relocation, from travel arrangements to settling into new job environments.",
+    },
+    {
+      icon: Users,
+      title: "Emergency Workforce Solutions",
+      desc: "Offering quick deployment of workers in urgent or unforeseen circumstances.",
+    },
+    {
+      icon: MessageCircle,
+      title: "Client Support",
+      desc: "Providing responsive support for employers and candidates throughout recruitment and deployment.",
+    },
+  ];
 
   return (
     <>
@@ -73,11 +74,11 @@ export default function HomePage() {
               {t.home.heroSubtitle}
             </p>
             <div className="flex flex-wrap gap-4 animate-fade-in-up animate-delay-300">
-              <Link to="/jobs" className="btn-gold">
-                {t.home.browseJobs} <ArrowRight className="w-4 h-4 ml-2" />
+              <Link to="/employer" className="btn-gold">
+                {t.nav.forEmployers} <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
-              <Link to="/register" className="btn-outline-corporate border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10">
-                {t.home.registerNow}
+              <Link to="/portal" className="btn-outline-corporate border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10">
+                {t.nav.candidatePortal}
               </Link>
             </div>
           </div>
@@ -111,7 +112,7 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {countries.map((c) => (
-              <Link key={c.name} to={`/jobs?country=${encodeURIComponent(c.name)}`} className="card-corporate text-center group">
+              <Link key={c.name} to={`/portal/jobs?country=${encodeURIComponent(c.name)}`} className="card-corporate text-center group">
                 <div className="text-4xl mb-3">{c.flag}</div>
                 <h3 className="font-heading text-base font-semibold text-foreground">{c.name}</h3>
                 <p className="text-xs text-muted-foreground font-body mt-1">{c.jobs} {t.home.viewJobs}</p>
@@ -122,54 +123,55 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Jobs */}
+      {/* Support Services */}
       <section className="section-padding bg-secondary">
         <div className="container-wide">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-            <div>
-              <div className="gold-divider mb-4" />
-              <h2 className="heading-section mb-2">{t.home.jobsTitle}</h2>
-              <p className="text-body">{t.home.jobsSub}</p>
-            </div>
-            <Link to="/jobs" className="btn-outline-corporate text-xs">
-              {t.home.viewAll} <ArrowRight className="w-3 h-3 ml-2" />
-            </Link>
+          <div className="text-center mb-12">
+            <div className="gold-divider mx-auto mb-4" />
+            <h2 className="heading-section mb-3">We Are Always Ready to Help You</h2>
+            <p className="text-body max-w-3xl mx-auto">
+              At Horizon Manpower, we are always here to support you. Whether you are looking for reliable workers or seeking the right job opportunity,
+              our team is committed to providing exceptional service with integrity, professionalism, and care.
+            </p>
+            <p className="text-body max-w-3xl mx-auto mt-3">
+              Reach out to us today, and let us assist you in making the right connection.
+            </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {loadingFeaturedJobs &&
-              Array.from({ length: 4 }).map((_, i) => (
-                <div key={`job-skeleton-${i}`} className="card-corporate animate-pulse" aria-hidden="true">
-                  <div className="h-5 w-24 rounded bg-muted mb-3" />
-                  <div className="h-6 w-4/5 rounded bg-muted mb-2" />
-                  <div className="h-4 w-1/2 rounded bg-muted mb-2" />
-                  <div className="h-4 w-2/5 rounded bg-muted mb-5" />
-                  <div className="h-4 w-20 rounded bg-muted" />
-                </div>
-              ))}
 
-            {!loadingFeaturedJobs &&
-              featuredJobs.map((job) => (
-                <div key={job.id} className="card-corporate">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Briefcase className="w-4 h-4 text-accent" />
-                    <span className="badge-gold text-[10px]">{job.contract_length ?? "-"}</span>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {supportServices.map((item, index) => (
+              <div
+                key={item.title}
+                className="card-corporate h-full border border-border/80 hover:border-accent/40 hover:shadow-lg transition-all duration-300"
+              >
+                <div className="flex items-start justify-between gap-3 mb-4">
+                  <div className="w-11 h-11 rounded-lg bg-accent/10 text-accent flex items-center justify-center">
+                    <item.icon className="w-5 h-5" />
                   </div>
-                  <h3 className="font-heading text-lg font-semibold text-foreground mb-1">{job.title}</h3>
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground font-body mb-2">
-                    <MapPin className="w-3 h-3" /> {job.country}
-                  </div>
-                  <div className="flex items-center gap-1 text-sm font-semibold text-accent font-body">
-                    <DollarSign className="w-3 h-3" /> ${job.salary_min ?? 0}-{job.salary_max ?? 0}{t.jobs.month}
-                  </div>
-                  <Link to="/jobs" className="mt-4 block text-sm font-medium text-primary hover:text-accent transition-colors font-body">
-                    {t.home.applyNow} →
+                  <span className="text-[11px] font-semibold font-body tracking-wide text-muted-foreground">
+                    SERVICE {(index + 1).toString().padStart(2, "0")}
+                  </span>
+                </div>
+
+                <h3 className="font-heading text-lg font-semibold text-foreground mb-2 leading-snug">{item.title}</h3>
+                <p className="text-body-sm leading-relaxed">{item.desc}</p>
+
+                <div className="mt-5 pt-4 border-t border-border/70">
+                  <Link to="/contact" className="text-sm font-medium text-primary hover:text-accent transition-colors font-body">
+                    Talk to our team →
                   </Link>
                 </div>
-              ))}
+              </div>
+            ))}
+          </div>
 
-            {!loadingFeaturedJobs && featuredJobs.length === 0 && (
-              <div className="lg:col-span-4 md:col-span-2 text-center py-10 text-body">{t.jobs.noResults}</div>
-            )}
+          <div className="flex flex-wrap justify-center gap-4 mt-10">
+            <Link to="/employer" className="btn-gold">
+              {t.nav.forEmployers} <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
+            <Link to="/portal" className="btn-outline-corporate">
+              {t.nav.candidatePortal}
+            </Link>
           </div>
         </div>
       </section>
@@ -184,10 +186,10 @@ export default function HomePage() {
           <h2 className="font-heading text-3xl md:text-4xl font-bold text-primary-foreground mb-4">{t.home.ctaTitle}</h2>
           <p className="text-primary-foreground/80 font-body text-lg mb-8 max-w-xl mx-auto">{t.home.ctaSub}</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/register" className="btn-gold">
+            <Link to="/employer" className="btn-gold">
               {t.home.ctaRegister} <ArrowRight className="w-4 h-4 ml-2" />
             </Link>
-            <Link to="/status" className="btn-outline-corporate border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10">
+            <Link to="/portal/status" className="btn-outline-corporate border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10">
               {t.home.ctaStatus}
             </Link>
           </div>

@@ -1,10 +1,28 @@
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Phone, Mail, MapPin, MessageCircle, Send } from "lucide-react";
 import logoIcon from "@/assets/logo-icon.png";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
   const { t } = useLanguage();
+  const location = useLocation();
+  const isPortalRoute = location.pathname.startsWith("/portal");
+
+  const quickLinks = isPortalRoute
+    ? [
+        { label: t.nav.jobs, path: "/portal/jobs" },
+        { label: t.nav.register, path: "/portal/register" },
+        { label: t.nav.training, path: "/portal/training" },
+        { label: t.nav.status, path: "/portal/status" },
+      ]
+    : [
+        { label: t.nav.home, path: "/" },
+        { label: t.nav.about, path: "/about" },
+        { label: t.nav.forEmployers, path: "/employer" },
+        { label: t.nav.contact, path: "/contact" },
+        { label: t.nav.candidatePortal, path: "/portal" },
+      ];
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -31,13 +49,7 @@ export default function Footer() {
           <div>
             <h4 className="font-heading text-base font-semibold mb-4">{t.nav.home}</h4>
             <ul className="space-y-2 font-body text-sm">
-              {[
-                { label: t.nav.about, path: "/about" },
-                { label: t.nav.jobs, path: "/jobs" },
-                { label: t.nav.register, path: "/register" },
-                { label: t.nav.training, path: "/training" },
-                { label: t.nav.status, path: "/status" },
-              ].map((l) => (
+              {quickLinks.map((l) => (
                 <li key={l.path}>
                   <Link to={l.path} className="opacity-70 hover:opacity-100 hover:text-gold transition-all">
                     {l.label}
