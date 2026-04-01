@@ -78,6 +78,14 @@
 }
 
 @layer components {
+  .quicklinks-rail-left {
+    left: clamp(0.75rem, calc((100vw - 80rem) / 2 - 3.5rem), 2.5rem);
+  }
+
+  .quicklinks-rail-right {
+    right: clamp(0.75rem, calc((100vw - 80rem) / 2 - 3.5rem), 2.5rem);
+  }
+
   .section-padding {
     @apply px-4 sm:px-6 lg:px-8 py-16 md:py-24;
   }

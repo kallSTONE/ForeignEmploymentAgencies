@@ -289,6 +289,8 @@ export const am: typeof en = {
   employer: {
     title: "የአሰሪ ሽርክና",
     subtitle: "ለድርጅትዎ ብቁ ኢትዮጵያውያን ሰራተኞችን ለመቅጠር ጥያቄ ያቅርቡ።",
+    bookAppointment: "ቀጠሮ ያስይዙ",
+    aboutUs: "ስለ እኛ",
     companyInfo: "የኩባንያ መረጃ",
     companyName: "የኩባንያ ስም",
     country: "ሀገር",

@@ -7,7 +7,7 @@ export default function FloatingContactWidget() {
   const [chatOpen, setChatOpen] = useState(false);
   const { t, isRtl } = useLanguage();
 
-  const quickLinksPosition = isRtl ? "right-3 md:right-5" : "left-3 md:left-5";
+  const quickLinksPosition = isRtl ? "quicklinks-rail-right" : "quicklinks-rail-left";
   const quickLinksMobilePosition = isRtl ? "right-4" : "left-4";
   const chatPosition = isRtl ? "left-4 md:left-6" : "right-4 md:right-6";
 
@@ -45,7 +45,7 @@ export default function FloatingContactWidget() {
         </a>
       </aside>
 
-      <aside className={`fixed ${quickLinksPosition} top-[45%] -translate-y-1/2 z-40 hidden md:flex flex-col overflow-hidden rounded-xl shadow-lg border border-border`}>
+      <aside className={`fixed ${quickLinksPosition} top-[58%] -translate-y-1/2 z-40 hidden md:flex flex-col overflow-hidden rounded-xl shadow-lg border border-border`}>
         <Link
           to="/contact"
           className="w-12 h-12 bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center transition-colors"

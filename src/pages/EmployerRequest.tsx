@@ -61,7 +61,7 @@ export default function EmployerRequest() {
         </div>
       </section>
 
-      <section className="section-padding bg-background">
+      <section id="employer-request-form" className="section-padding bg-background scroll-mt-24">
         <div className="container-wide max-w-2xl">
           <form onSubmit={handleSubmit} className="card-corporate space-y-5">
             <div className="grid md:grid-cols-2 gap-4">

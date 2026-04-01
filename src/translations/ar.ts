@@ -280,6 +280,8 @@ export const ar: typeof en = {
   employer: {
     title: "شراكة أصحاب العمل",
     subtitle: "قدم طلباً لتوظيف عمالة إثيوبية ماهرة لمؤسستك.",
+    bookAppointment: "احجز موعداً",
+    aboutUs: "من نحن",
     companyInfo: "معلومات الشركة",
     companyName: "اسم الشركة",
     country: "الدولة",

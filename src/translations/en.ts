@@ -287,6 +287,8 @@ export const en = {
   employer: {
     title: "Employer Partnership",
     subtitle: "Submit a request to hire skilled Ethiopian workers for your organization.",
+    bookAppointment: "Book Appointment",
+    aboutUs: "About Us",
     companyInfo: "Company Information",
     companyName: "Company Name",
     country: "Country",

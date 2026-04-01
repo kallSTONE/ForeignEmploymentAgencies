@@ -1,10 +1,15 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Shield, Globe, Users, Award, Star, ChevronRight, MessageCircle, Send, Phone, Briefcase } from "lucide-react";
-import heroImg from "@/assets/hero-workers.jpg";
+import { ArrowRight, Shield, Globe, Users, Award, Star, ChevronRight, MessageCircle, Send, Phone, Briefcase, ChevronLeft } from "lucide-react";
 import gulfImg from "@/assets/gulf-skyline.jpg";
 import trainingImg from "@/assets/training-center.png";
 import officeImg from "@/assets/office.png";
 import gradImg from "@/assets/graduation.png";
+import airport1 from "@/assets/airport.png";
+import airport2 from "@/assets/airport2.png";
+import airport3 from "@/assets/airport3.png";
+import airport4 from "@/assets/airport4.png";
+import airport5 from "@/assets/airport5.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -25,6 +30,24 @@ const testimonials = [
 export default function HomePage() {
   const { t } = useLanguage();
   const faqs = t.home.faqItems;
+  const airportImages = [airport4, airport2, airport3, airport1, airport4, airport5];
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % airportImages.length);
+    }, 5000);
+
+    return () => window.clearInterval(timer);
+  }, [airportImages.length]);
+
+  const goToPreviousSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + airportImages.length) % airportImages.length);
+  };
+
+  const goToNextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % airportImages.length);
+  };
 
   const supportServices = [
     {
@@ -62,10 +85,48 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[85vh] flex items-center">
+      <section className="relative min-h-screen md:min-h-[80vh] md:min-h-[85vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroImg} alt="Ethiopian workers departing for Gulf employment" className="w-full h-full object-cover" />
+          {airportImages.map((image, index) => (
+            <img
+              key={image}
+              src={image}
+              alt={`Airport departure scene ${index + 1}`}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                currentSlide === index ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          ))}
           <div className="overlay-navy absolute inset-0" />
+        </div>
+        <button
+          type="button"
+          onClick={goToPreviousSlide}
+          aria-label="Previous slide"
+          className="absolute left-4 md:left-6 z-20 w-11 h-11 rounded-full bg-black/35 text-primary-foreground hover:bg-black/50 transition-colors flex items-center justify-center"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          type="button"
+          onClick={goToNextSlide}
+          aria-label="Next slide"
+          className="absolute right-4 md:right-6 z-20 w-11 h-11 rounded-full bg-black/35 text-primary-foreground hover:bg-black/50 transition-colors flex items-center justify-center"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+        <div className="absolute bottom-7 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+          {airportImages.map((image, index) => (
+            <button
+              key={`indicator-${image}`}
+              type="button"
+              aria-label={`Go to slide ${index + 1}`}
+              onClick={() => setCurrentSlide(index)}
+              className={`h-2.5 rounded-full transition-all ${
+                currentSlide === index ? "w-7 bg-accent" : "w-2.5 bg-primary-foreground/70 hover:bg-primary-foreground"
+              }`}
+            />
+          ))}
         </div>
         <div className="relative container-wide section-padding">
           <div className="max-w-2xl">
@@ -77,11 +138,11 @@ export default function HomePage() {
               {t.home.heroSubtitle}
             </p>
             <div className="flex flex-wrap gap-4 animate-fade-in-up animate-delay-300">
-              <Link to="/employer" className="btn-gold">
-                {t.nav.forEmployers} <ArrowRight className="w-4 h-4 ml-2" />
+              <Link to="/employer#employer-request-form" className="btn-gold">
+                {t.employer.bookAppointment} <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
-              <Link to="/portal" className="btn-outline-corporate border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10">
-                {t.nav.candidatePortal}
+              <Link to="/about" className="btn-outline-corporate border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10">
+                {t.employer.aboutUs}
               </Link>
             </div>
           </div>
@@ -167,15 +228,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-
-          <div className="flex flex-wrap justify-center gap-4 mt-10">
-            <Link to="/employer" className="btn-gold">
-              {t.nav.forEmployers} <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
-            <Link to="/portal" className="btn-outline-corporate">
-              {t.nav.candidatePortal}
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -189,11 +241,11 @@ export default function HomePage() {
           <h2 className="font-heading text-3xl md:text-4xl font-bold text-primary-foreground mb-4">{t.home.ctaTitle}</h2>
           <p className="text-primary-foreground/80 font-body text-lg mb-8 max-w-xl mx-auto">{t.home.ctaSub}</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/employer" className="btn-gold">
-              {t.home.ctaRegister} <ArrowRight className="w-4 h-4 ml-2" />
+            <Link to="/employer#employer-request-form" className="btn-gold">
+              {t.employer.bookAppointment} <ArrowRight className="w-4 h-4 ml-2" />
             </Link>
-            <Link to="/portal/status" className="btn-outline-corporate border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10">
-              {t.home.ctaStatus}
+            <Link to="/about" className="btn-outline-corporate border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10">
+              {t.employer.aboutUs}
             </Link>
           </div>
         </div>
@@ -261,7 +313,7 @@ export default function HomePage() {
             <h2 className="heading-section mb-3">{t.home.galleryTitle}</h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {[heroImg, trainingImg, officeImg, gulfImg, gradImg, trainingImg].map((img, i) => (
+            {[airport4, trainingImg, officeImg, gulfImg, gradImg, airport2].map((img, i) => (
               <div key={i} className="aspect-[4/3] overflow-hidden rounded-md">
                 <img src={img} alt={`Gallery ${i + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
               </div>
