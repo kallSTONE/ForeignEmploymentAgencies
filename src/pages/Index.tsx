@@ -85,7 +85,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-screen md:min-h-[80vh] md:min-h-[85vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[80vh] md:min-h-[85vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           {airportImages.map((image, index) => (
             <img

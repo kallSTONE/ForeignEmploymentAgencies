@@ -16,7 +16,7 @@ export const en = {
   // Home page
   home: {
     heroTitle: "Trusted Ethiopian Recruitment Partner for Gulf Agencies",
-    heroSubtitle: "Horizon Manpower helps Gulf employment agencies and employers source, prepare, and deploy reliable Ethiopian talent with full compliance support.",
+    heroSubtitle: "We help source, prepare, and deploy reliable Ethiopian talent with full compliance support.",
     browseJobs: "Browse Open Roles",
     registerNow: "Register Candidate",
     statsWorkers: "Workers Deployed",
